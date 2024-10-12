@@ -1,3 +1,4 @@
+import 'package:expense_tracker_app/components/expense_summary.dart';
 import 'package:expense_tracker_app/data/expense_data.dart';
 import 'package:expense_tracker_app/models/expense_item.dart';
 import 'package:flutter/material.dart';
@@ -29,10 +30,17 @@ class _HomeScreenState extends State<HomeScreen> {
                   //expense name
                   TextField(
                     controller: newExpenseNameController,
+                    decoration: InputDecoration(
+                      label: Text("Enter expense name"),
+                    ),
                   ),
                   //expense amount
                   TextField(
                     controller: newExpenseAmountController,
+                    keyboardType: TextInputType.number,
+                    decoration: InputDecoration(
+                      label: Text("Enter amount"),
+                    ),
                   )
                 ],
               ),
@@ -87,15 +95,23 @@ class _HomeScreenState extends State<HomeScreen> {
                 onPressed: addNewExpense,
                 child: const Icon(Icons.add),
               ),
-              body: ListView.builder(
-                itemCount: value.getAllExpenseList().length,
-                itemBuilder: (context, index) => ListTile(
-                  title: Text(value.getAllExpenseList()[index].name),
-                  subtitle: Text(
-                      "${value.getAllExpenseList()[index].dateTime.day} / ${value.getAllExpenseList()[index].dateTime.month} / ${value.getAllExpenseList()[index].dateTime.year}"),
-                  trailing:
-                      Text("Rs${value.getAllExpenseList()[index].amount}"),
-                ),
+              body: Column(
+                children: [
+                  //weekly summary
+                  ExpenseSummary(startOfWeek: value.startOfWeekDate()),
+                  ListView.builder(
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    itemCount: value.getAllExpenseList().length,
+                    itemBuilder: (context, index) => ListTile(
+                      title: Text(value.getAllExpenseList()[index].name),
+                      subtitle: Text(
+                          "${value.getAllExpenseList()[index].dateTime.day}/${value.getAllExpenseList()[index].dateTime.month}/${value.getAllExpenseList()[index].dateTime.year}"),
+                      trailing:
+                          Text("Rs ${value.getAllExpenseList()[index].amount}"),
+                    ),
+                  ),
+                ],
               ),
             ));
   }
